@@ -14,11 +14,15 @@ for (let i = 0; i < 8; i++) {
 
 const clickCell = async (x, y) => {
   console.log(`click ${x}, ${y}`);
-  await tauri.invoke('init_game', {
+
+  let result = await tauri.invoke('init_game', {
     'ai_1': null,
     'ai_2': {
+      level: 1
     },
   });
+
+  console.log(result);
 };
 
 </script>

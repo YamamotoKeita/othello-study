@@ -1,6 +1,6 @@
 use crate::model::board::Board;
+use crate::model::player_type::PlayerType;
 use crate::model::points::Points;
-use crate::PlayerType;
 
 pub trait Player {
     fn play(&self, board: &Board) -> Points;
@@ -15,14 +15,14 @@ pub trait OthelloView {
     fn game_end(&self, board: &Board);
 }
 
-pub struct GameManager<P1: Player, P2: Player, View: OthelloView> {
-    first_player: P1,
-    second_player: P2,
-    view: View,
+pub struct GameManager {
+    first_player: Box<dyn Player>,
+    second_player: Box<dyn Player>,
+    view: Box<dyn OthelloView>,
 }
 
-impl <P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
-    pub fn new(first_player: P1, second_player: P2, view: View) -> GameManager<P1, P2, View> {
+impl GameManager {
+    pub fn new(first_player: Box<dyn Player>, second_player: Box<dyn Player>, view: Box<dyn OthelloView>) -> GameManager {
         GameManager {
             first_player,
             second_player,
@@ -66,8 +66,8 @@ impl <P1: Player, P2: Player, View: OthelloView> GameManager<P1, P2, View> {
 
     fn get_player(&self, player: PlayerType) -> &dyn Player {
         match player {
-            PlayerType::First => &self.first_player,
-            PlayerType::Second => &self.second_player,
+            PlayerType::First => self.first_player.as_ref(),
+            PlayerType::Second => self.second_player.as_ref(),
             PlayerType::None => panic!("Use a player when there is no player."),
         }
     }

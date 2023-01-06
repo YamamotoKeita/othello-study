@@ -1,6 +1,6 @@
-use serde::{Serialize};
+use serde::{Serialize, Deserialize};
 
-#[derive(Debug, Serialize, Clone, Copy)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy)]
 pub struct AiConfig {
     level: u32,
 }
