@@ -6,3 +6,13 @@ pub struct GameInfo {
     turn: u32,
     player: u32,
 }
+
+impl GameInfo {
+    pub fn new() -> GameInfo {
+        GameInfo {
+            board: [],
+            turn: 0,
+            player: 0,
+        }
+    }
+}

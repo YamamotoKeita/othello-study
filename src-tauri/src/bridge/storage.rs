@@ -2,7 +2,7 @@ use std::sync::Mutex;
 use crate::game_manager::GameManager;
 
 pub struct Storage {
-    store: Mutex<Option<GameManager>>,
+    pub store: Mutex<Option<GameManager>>,
 }
 
 impl Storage {

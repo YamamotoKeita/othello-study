@@ -4,28 +4,29 @@
 )]
 
 use tauri::Manager;
+use tauri::State;
 use crate::bridge::ai_config::AiConfig;
 use crate::bridge::storage::Storage;
+use crate::game_manager::GameManager;
 
 mod tests;
 mod model;
 mod bridge;
 mod game_manager;
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+fn init_game(ai_config1: Option<AiConfig>, ai_config2: Option<AiConfig>, state: State<'_, Storage>) {
+    //state.store = GameManager::new()
+
 }
 
 #[tauri::command]
-fn init_game(ai_config1: Option<AiConfig>, ai_config2: Option<AiConfig>) {
+fn click(player: u32, x: u32, y: u32, state: State<'_, Storage>) {
 }
 
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
-            greet,
             init_game,
         ])
         .setup(|app| {

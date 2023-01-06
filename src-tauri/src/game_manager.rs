@@ -16,13 +16,13 @@ pub trait OthelloView {
 }
 
 pub struct GameManager {
-    first_player: Box<dyn Player>,
-    second_player: Box<dyn Player>,
-    view: Box<dyn OthelloView>,
+    first_player: Box<dyn Player + Send + 'static>,
+    second_player: Box<dyn Player + Send + 'static>,
+    view: Box<dyn OthelloView + Send + 'static>,
 }
 
 impl GameManager {
-    pub fn new(first_player: Box<dyn Player>, second_player: Box<dyn Player>, view: Box<dyn OthelloView>) -> GameManager {
+    pub fn new(first_player: Box<dyn Player + Send + 'static>, second_player: Box<dyn Player + Send + 'static>, view: Box<dyn OthelloView + Send + 'static>) -> GameManager {
         GameManager {
             first_player,
             second_player,
