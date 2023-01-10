@@ -1,4 +1,5 @@
-use crate::Board;
+
+use crate::model::board::Board;
 use crate::model::evaluation::Evaluation;
 
 pub mod cell_weight;

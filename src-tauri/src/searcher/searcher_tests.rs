@@ -3,12 +3,15 @@
 #[allow(unused_imports)]
 mod searcher_tests {
     use crate::evaluator::stone_count::StoneCountEvaluator;
-    use crate::{Board, CuiView, NegaAlpha, PlayerType, Points, points_to_str};
     use crate::evaluator::stone_count_nyanyan::StoneCountNyanyanEvaluator;
+    use crate::model::board::Board;
     use crate::model::evaluation::Evaluation;
+    use crate::model::player_type::PlayerType;
+    use crate::model::points::Points;
     use crate::searcher::alpha_beta::AlphaBeta;
     use crate::searcher::game_tree_searcher::GameTreeSearcher;
     use crate::searcher::mini_max::MiniMax;
+    use crate::searcher::nega_alpha::NegaAlpha;
     use crate::searcher::nega_max_nyanyan::NegaMaxNyanyan;
 
     fn searchers() -> Vec<Box<dyn GameTreeSearcher>> {

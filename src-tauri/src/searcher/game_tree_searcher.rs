@@ -1,5 +1,6 @@
-use crate::{Board, POINT_ITERATOR, Points};
+use crate::model::board::Board;
 use crate::model::evaluation::{Evaluation, EVALUATION_MIN};
+use crate::model::points::{POINT_ITERATOR, Points};
 use crate::searcher::Searcher;
 
 pub trait GameTreeSearcher {

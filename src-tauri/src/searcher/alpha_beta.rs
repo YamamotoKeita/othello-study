@@ -1,7 +1,9 @@
 use std::cmp::{max, min};
-use crate::{Board, PlayerType, POINT_ITERATOR};
 use crate::evaluator::Evaluator;
+use crate::model::board::Board;
 use crate::model::evaluation::{Evaluation, EVALUATION_MAX, EVALUATION_MIN};
+use crate::model::player_type::PlayerType;
+use crate::model::points::POINT_ITERATOR;
 use crate::searcher::game_tree_searcher::GameTreeSearcher;
 
 pub struct AlphaBeta<T: Evaluator> {

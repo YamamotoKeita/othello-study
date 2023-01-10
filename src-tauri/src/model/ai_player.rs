@@ -1,14 +1,14 @@
-use crate::{Board};
-use crate::game_manager::Player;
+use crate::model::board::Board;
+use crate::model::player::Player;
 use crate::model::points::Points;
 use crate::searcher::Searcher;
 
-pub struct AiPlayer<T: Searcher> {
-    searcher: T,
+pub struct AiPlayer {
+    searcher: Box<dyn Searcher + Send + 'static>,
 }
 
-impl <T: Searcher> AiPlayer<T> {
-    pub fn new(searcher: T) -> AiPlayer<T> {
+impl AiPlayer {
+    pub fn new(searcher: Box<dyn Searcher + Send + 'static>) -> Self {
         AiPlayer { searcher }
     }
 
@@ -32,7 +32,7 @@ impl <T: Searcher> AiPlayer<T> {
     }
 }
 
-impl <T: Searcher> Player for AiPlayer<T> {
+impl Player for AiPlayer {
     fn play(&self, board: &Board) -> Points {
         self.searcher.search(board, self.get_depth(board.stone_count() as u32))
     }
@@ -40,5 +40,4 @@ impl <T: Searcher> Player for AiPlayer<T> {
     fn message_before_play(&self, board: &Board) -> Option<String> {
         Some(format!("Turn={}, Depth={}", board.stone_count() - 3, self.get_depth(board.stone_count() as u32)))
     }
-
 }

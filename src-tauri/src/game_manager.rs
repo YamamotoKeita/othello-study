@@ -1,11 +1,7 @@
 use crate::model::board::Board;
+use crate::model::player::Player;
 use crate::model::player_type::PlayerType;
 use crate::model::points::Points;
-
-pub trait Player {
-    fn play(&self, board: &Board) -> Points;
-    fn message_before_play(&self, board: &Board) -> Option<String>;
-}
 
 pub trait OthelloView {
     fn wait_next_move(&self, board: &Board);

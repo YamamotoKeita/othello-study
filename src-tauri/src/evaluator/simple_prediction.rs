@@ -1,8 +1,9 @@
-use crate::{Board};
+
 use crate::evaluator::cell_weight::CellWeightEvaluator;
 use crate::evaluator::Evaluator;
 use crate::evaluator::open_count::OpenCountEvaluator;
 use crate::evaluator::placeable_point::PlaceablePointEvaluator;
+use crate::model::board::Board;
 use crate::model::evaluation::Evaluation;
 
 

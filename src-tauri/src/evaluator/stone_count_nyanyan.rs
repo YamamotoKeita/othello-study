@@ -1,6 +1,8 @@
-use crate::{Board, PlayerType};
+
 use crate::evaluator::Evaluator;
+use crate::model::board::Board;
 use crate::model::evaluation::Evaluation;
+use crate::model::player_type::PlayerType;
 
 pub struct StoneCountNyanyanEvaluator {
     stone_weight: i32,

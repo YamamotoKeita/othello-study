@@ -1,6 +1,7 @@
-use crate::{Board, Points};
 use crate::evaluator::Evaluator;
+use crate::model::board::Board;
 use crate::model::evaluation::Evaluation;
+use crate::model::points::Points;
 
 const CELL_WEIGHT: [i32; 64] = [
     30, -12,   0, -1, -1,  0, -12,  30,

@@ -18,7 +18,14 @@ onMounted(async () => {
 const clickCell = async (x, y) => {
   let result = await tauri.invoke('click', {x, y});
   if (result) {
-    console.log(result)
+    boardRef.value = result.board;
+  }
+  waitAi();
+};
+
+const waitAi = async () => {
+  let result = await tauri.invoke('wait_ai', {x, y});
+  if (result) {
     boardRef.value = result.board;
   }
 };

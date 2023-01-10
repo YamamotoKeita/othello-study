@@ -1,8 +1,8 @@
 use std::io;
 
-use crate::{Board, text_to_point_safely};
-use crate::game_manager::Player;
-use crate::model::points::Points;
+use crate::model::board::Board;
+use crate::model::player::Player;
+use crate::model::points::{Points, text_to_point_safely};
 
 pub struct CuiPlayer {
 }

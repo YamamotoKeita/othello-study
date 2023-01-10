@@ -1,6 +1,7 @@
 use crate::model::points::*;
-use crate::{Board, Direction};
 use crate::evaluator::Evaluator;
+use crate::model::board::Board;
+use crate::model::direction::Direction;
 use crate::model::evaluation::Evaluation;
 
 pub struct OpenCountEvaluator {}
