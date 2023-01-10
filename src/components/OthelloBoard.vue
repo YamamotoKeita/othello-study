@@ -1,38 +1,37 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from 'vue';
 import { tauri } from '@tauri-apps/api';
 
-const board = ref([]);
+const boardRef = ref([]);
 
-for (let i = 0; i < 8; i++) {
-  let row = [];
-  for (let j = 0; j < 8 ; j++) {
-    row.push('');
-  }
-  board.value.push(row);
-}
-
-const clickCell = async (x, y) => {
-  console.log(`click ${x}, ${y}`);
-
+onMounted(async () => {
   let result = await tauri.invoke('init_game', {
     'ai_1': null,
     'ai_2': {
-      level: 1
+     level: 1
     },
   });
 
-  console.log(result);
+  boardRef.value = result.board;
+});
+
+const clickCell = async (x, y) => {
+  let result = await tauri.invoke('click', {x, y});
+  if (result) {
+    console.log(result)
+    boardRef.value = result.board;
+  }
 };
 
 </script>
 
 <template>
   <div class="othello-board">
-    <div class="row" v-for="(row, y) in board">
-      <div class="cell" v-for="(cell, x) in row" @click="clickCell(x, y)">
+    <div class="row" v-for="(row, y) in boardRef">
+      <div class="cell" v-for="(stone, x) in row" @click="clickCell(x, y)">
         <div class="star" v-if="(x === 1 && y === 1) || (x === 1 && y === 5) || (x === 5 && y === 1) || (x === 5 && y === 5)"></div>
-        <div class="stone white"></div>
+        <div v-if="stone === 1" class="stone black"></div>
+        <div v-if="stone === 2" class="stone white"></div>
       </div>
     </div>
   </div>

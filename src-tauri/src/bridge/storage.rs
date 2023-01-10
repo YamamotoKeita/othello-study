@@ -1,8 +1,8 @@
 use std::sync::Mutex;
-use crate::game_manager::GameManager;
+use crate::bridge::game_info::GameInfo;
 
 pub struct Storage {
-    pub store: Mutex<Option<GameManager>>,
+    pub store: Mutex<Option<GameInfo>>,
 }
 
 impl Storage {
