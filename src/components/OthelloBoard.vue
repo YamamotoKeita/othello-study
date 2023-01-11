@@ -4,6 +4,7 @@ import { tauri } from '@tauri-apps/api';
 
 const boardRef = ref([]);
 const playerRef = ref([]);
+const candidatesRef = ref([]);
 
 onMounted(async () => {
   let result = await tauri.invoke('init_game', {
@@ -15,6 +16,7 @@ onMounted(async () => {
 
   boardRef.value = result.board;
   playerRef.value = result.next_player;
+  candidatesRef.value = result.next_candidates;
 });
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -31,8 +33,8 @@ const clickCell = async (x, y) => {
       return reversePoints(boardRef.value, points, result.placed_stone);
     });
     await Promise.all(reversing);
+    candidatesRef.value = result.next_candidates;
 
-    //boardRef.value = result.board;
     waitAi();
   }
 };
@@ -49,7 +51,12 @@ const waitAi = async () => {
   if (result) {
     boardRef.value = result.board;
     playerRef.value = result.next_player;
+    candidatesRef.value = result.next_candidates;
   }
+};
+
+const isCandidate = (x, y) => {
+  return candidatesRef.value.find(p => p.x === x && p.y === y) !== undefined;
 };
 
 </script>
@@ -57,7 +64,7 @@ const waitAi = async () => {
 <template>
   <div class="othello-board">
     <div class="row" v-for="(row, y) in boardRef">
-      <div class="cell" v-for="(stone, x) in row" @click="clickCell(x, y)">
+      <div class="cell" v-for="(stone, x) in row" @click="clickCell(x, y)" :class="{'candidate': isCandidate(x, y)}">
         <div class="star" v-if="(x === 1 && y === 1) || (x === 1 && y === 5) || (x === 5 && y === 1) || (x === 5 && y === 5)"></div>
         <div v-if="stone === 1 || stone === 2" class="stone" :class="{'black': stone === 1, 'white': stone === 2}"></div>
       </div>
@@ -106,7 +113,9 @@ const waitAi = async () => {
       &:not(:last-child) {
         border-right: solid 1px $boarder-color;
       }
-
+      &.candidate {
+        background-color: #66afa8;
+      }
       .stone {
         position: relative;
         width: 80%;
@@ -150,6 +159,7 @@ const waitAi = async () => {
 
       .star {
         position: absolute;
+        z-index: 2;
         bottom: -4px; right: -4px;
         background-color: $boarder-color;
         border-radius: 50%;

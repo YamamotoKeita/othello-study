@@ -2,6 +2,7 @@ use serde::{Serialize, Deserialize};
 use crate::model::board::Board;
 use crate::model::direction::Direction;
 use crate::model::player_type::PlayerType;
+use crate::model::points::{Points, xy_to_point};
 
 #[derive(Debug, Serialize, Deserialize, Clone, Copy)]
 pub struct Point {
@@ -27,7 +28,7 @@ impl GameResponse {
             placed_point: None,
             reversed_lines: None,
             next_player: Some(GameResponse::stone_to_int(PlayerType::First)),
-            next_candidates: vec![],
+            next_candidates: GameResponse::points_to_vec(board.placeable_points),
         }
     }
 
@@ -40,7 +41,7 @@ impl GameResponse {
             placed_point: Some(placed_point),
             reversed_lines: Some(reversed_points),
             next_player: Some(GameResponse::stone_to_int(board.player)),
-            next_candidates: vec![],
+            next_candidates: GameResponse::points_to_vec(board.placeable_points),
         }
     }
 
@@ -50,6 +51,18 @@ impl GameResponse {
             for x in 0..=7 {
                 let stone = board.get_stone(x, y);
                 result[y as usize][x as usize] = GameResponse::stone_to_int(stone);
+            }
+        }
+        result
+    }
+
+    pub fn points_to_vec(points: Points) -> Vec<Point> {
+        let mut result = vec![];
+        for y in 0..=7 {
+            for x in 0..=7 {
+                if points & xy_to_point(x, y) != 0 {
+                    result.push(Point{x, y});
+                }
             }
         }
         result
