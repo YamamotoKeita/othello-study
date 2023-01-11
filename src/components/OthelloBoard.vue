@@ -1,16 +1,16 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { tauri } from '@tauri-apps/api';
+import {ref, onMounted} from 'vue';
+import {tauri} from '@tauri-apps/api';
 
 const boardRef = ref([]);
-const playerRef = ref([]);
+const playerRef = ref(0);
 const candidatesRef = ref([]);
 
 onMounted(async () => {
   let result = await tauri.invoke('init_game', {
     'ai_1': null,
     'ai_2': {
-     level: 1
+      level: 1
     },
   });
 
@@ -66,7 +66,8 @@ const isCandidate = (x, y) => {
     <div class="row" v-for="(row, y) in boardRef">
       <div class="cell" v-for="(stone, x) in row" @click="clickCell(x, y)" :class="{'candidate': isCandidate(x, y)}">
         <div class="star" v-if="(x === 1 && y === 1) || (x === 1 && y === 5) || (x === 5 && y === 1) || (x === 5 && y === 5)"></div>
-        <div v-if="stone === 1 || stone === 2" class="stone" :class="{'black': stone === 1, 'white': stone === 2}"></div>
+        <div v-if="stone === 1 || stone === 2" class="stone"
+             :class="{'black': stone === 1, 'white': stone === 2}"></div>
       </div>
     </div>
   </div>
@@ -84,115 +85,126 @@ const isCandidate = (x, y) => {
 </template>
 
 <style scoped lang="scss">
-  $board-size: 400px;
-  $board-color: #7bccc5;
-  $boarder-color: gray;
+$board-size: 400px;
+$board-color: #7bccc5;
+$boarder-color: gray;
 
-  .othello-board {
-    background-color: $board-color;
+.othello-board {
+  background-color: $board-color;
+  display: flex;
+  flex-direction: column;
+  width: $board-size;
+  height: $board-size;
+
+  .row {
     display: flex;
-    flex-direction: column;
-    width: $board-size;
-    height: $board-size;
+    flex: 1;
 
-    .row {
-      display: flex;
-      flex: 1;
+    &:not(:last-child) {
+      border-bottom: solid 1px $boarder-color;
+    }
+  }
 
-      &:not(:last-child) {
-        border-bottom: solid 1px $boarder-color;
-      }
+  .cell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+
+    &:not(:last-child) {
+      border-right: solid 1px $boarder-color;
     }
 
-    .cell {
+    &.candidate {
+      background-color: #66afa8;
+    }
+
+    .stone {
       position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex: 1;
-      &:not(:last-child) {
-        border-right: solid 1px $boarder-color;
-      }
-      &.candidate {
-        background-color: #66afa8;
-      }
-      .stone {
-        position: relative;
-        width: 80%;
-        height: 80%;
+      width: 80%;
+      height: 80%;
 
-        &:before, &:after {
-          position: absolute;
-          transition: transform 0.5s 0s ease;
-          backface-visibility: hidden;
-          display: block;
-          content: ' ';
-          border-radius: 50%;
-          width: 100%;
-          height: 100%;
-        }
-
-        &:before {
-          background-color: black;
-        }
-        &:after {
-          background-color: white;
-        }
-
-        &.black {
-          &:before {
-            transform: rotateX(0deg);
-          }
-          &:after {
-            transform: rotateX(180deg);
-          }
-        }
-        &.white {
-          &:before {
-            transform: rotateX(180deg);
-          }
-          &:after {
-            transform: rotateX(0deg);
-          }
-        }
-      }
-
-      .star {
+      &:before, &:after {
         position: absolute;
-        z-index: 2;
-        bottom: -4px; right: -4px;
-        background-color: $boarder-color;
+        transition: transform 0.5s 0s ease;
+        backface-visibility: hidden;
+        display: block;
+        content: ' ';
         border-radius: 50%;
-        width: 8px;
-        height: 8px;
+        width: 100%;
+        height: 100%;
+      }
+
+      &:before {
+        background-color: black;
+      }
+
+      &:after {
+        background-color: white;
+      }
+
+      &.black {
+        &:before {
+          transform: rotateX(0deg);
+        }
+
+        &:after {
+          transform: rotateX(180deg);
+        }
+      }
+
+      &.white {
+        &:before {
+          transform: rotateX(180deg);
+        }
+
+        &:after {
+          transform: rotateX(0deg);
+        }
       }
     }
-  }
 
-  .info-row {
-    margin-top: 5px;
-    width: $board-size;
+    .star {
+      position: absolute;
+      z-index: 2;
+      bottom: -4px;
+      right: -4px;
+      background-color: $boarder-color;
+      border-radius: 50%;
+      width: 8px;
+      height: 8px;
+    }
+  }
+}
+
+.info-row {
+  margin-top: 5px;
+  width: $board-size;
+  display: flex;
+
+  .turn-info {
     display: flex;
+    align-items: center;
 
-    .turn-info {
-      display: flex;
-      align-items: center;
+    .next-player {
+      width: 30px;
+      height: 30px;
+      margin-left: 5px;
+      border-radius: 50%;
 
-      .next-player {
-        width: 30px; height: 30px;
-        margin-left: 5px;
-        border-radius: 50%;
-        &.black {
-          background-color: black;
-        }
-        &.white {
-          background-color: white;
-        }
+      &.black {
+        background-color: black;
+      }
+
+      &.white {
+        background-color: white;
       }
     }
-
-    .stone-info {
-      margin-left: auto;
-    }
   }
+
+  .stone-info {
+    margin-left: auto;
+  }
+}
 </style>
