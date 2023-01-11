@@ -8,6 +8,7 @@ pub struct CuiPlayer {
 }
 
 impl CuiPlayer {
+    #[allow(dead_code)]
     pub fn new() -> CuiPlayer {
         CuiPlayer{}
     }

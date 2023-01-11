@@ -12,7 +12,7 @@ pub struct GameInfo {
     ai_player1: Option<AiPlayer>,
     ai_player2: Option<AiPlayer>,
     pub board: Board,
-    player: PlayerType,
+    pub player: PlayerType,
 }
 
 impl GameInfo {
@@ -33,7 +33,7 @@ impl GameInfo {
     }
 
     fn make_ai_player(ai_config: Option<AiConfig>) -> Option<AiPlayer> {
-        let config = match ai_config {
+        let _config = match ai_config {
             Some(config)  => config,
             None => return None,
         };
@@ -70,7 +70,6 @@ impl GameInfo {
         if !self.can_play_ai() {
             return false;
         }
-
 
         return true;
     }

@@ -6,8 +6,7 @@
 use tauri::Manager;
 use tauri::State;
 use crate::bridge::ai_config::AiConfig;
-use crate::bridge::game_info::GameInfo;
-use crate::bridge::game_response::GameResponse;
+use crate::bridge::game_response::{GameResponse, Point};
 use crate::bridge::storage::Storage;
 
 mod tests;
@@ -20,14 +19,18 @@ mod evaluator;
 fn init_game(ai_config1: Option<AiConfig>, ai_config2: Option<AiConfig>, state: State<'_, Storage>) -> GameResponse {
     let mut game_info = state.store.lock().unwrap();
     game_info.init(ai_config1, ai_config2);
-    GameResponse::new(&game_info.board)
+    GameResponse::new(game_info.board)
 }
 
 #[tauri::command]
 fn click(x: u32, y: u32, state: State<'_, Storage>) -> Option<GameResponse> {
     let mut game_info = state.store.lock().unwrap();
+
+    let old_board = game_info.board;
+    let player = game_info.player;
     if game_info.click(x, y) {
-        return Some(GameResponse::new(&game_info.board));
+        let response = GameResponse::new_by_move(game_info.board, old_board, player, Point{x, y});
+        return Some(response);
     }
     return None;
 }
@@ -36,7 +39,7 @@ fn click(x: u32, y: u32, state: State<'_, Storage>) -> Option<GameResponse> {
 fn wait_ai(state: State<'_, Storage>) -> Option<GameResponse> {
     let mut game_info = state.store.lock().unwrap();
     if game_info.play_ai() {
-        return Some(GameResponse::new(&game_info.board));
+        return Some(GameResponse::new(game_info.board));
     }
     return None;
 }

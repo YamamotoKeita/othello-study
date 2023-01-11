@@ -38,6 +38,9 @@ pub fn coordinates_to_points(coordinates: &[(u32, u32)]) -> Points {
     points
 }
 
+/*
+ *  The top left square is (0, 0)
+ */
 pub fn xy_to_point(x: u32, y: u32) -> Points {
     let x_shift = 7 - x;
     let y_shift = 7 - y;

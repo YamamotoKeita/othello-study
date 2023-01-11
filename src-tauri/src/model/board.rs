@@ -160,6 +160,16 @@ impl Board {
         self.has_stone_at_point(player, point)
     }
 
+    pub fn get_stone(&self, x: u32, y: u32) -> PlayerType {
+        if self.has_stone(PlayerType::First, x, y) {
+            PlayerType::First
+        } else if self.has_stone(PlayerType::Second, x, y) {
+            PlayerType::Second
+        } else {
+            PlayerType::None
+        }
+    }
+
     #[inline(always)]
     pub fn has_stone_at_point(&self, player: PlayerType, point: Points) -> bool {
         self.get_stones(player) & point > 0
