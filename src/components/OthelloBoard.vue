@@ -28,19 +28,28 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 const clickCell = async (x, y) => {
   let result = await tauri.invoke('click', {x, y});
   if (result) {
-    const point = result.placed_point;
-    boardRef.value[point.y][point.x] = result.placed_stone;
-    playerRef.value = result.next_player;
-    await sleep(100);
-
-    const reversing = result.reversed_lines.map(points => {
-      return reversePoints(boardRef.value, points, result.placed_stone);
-    });
-    await Promise.all(reversing);
-    candidatesRef.value = result.next_candidates;
-
-    waitAi();
+    await updateBoard(result);
+    // TODO Refactor this
+    setTimeout(() => {
+      waitAi();
+    }, 0);
   }
+};
+
+const updateBoard = async (result) => {
+  const point = result.placed_point;
+  boardRef.value[point.y][point.x] = result.placed_stone;
+  await sleep(100);
+
+  const reversing = result.reversed_lines.map(points => {
+    return reversePoints(boardRef.value, points, result.placed_stone);
+  });
+
+  await Promise.all(reversing);
+
+  playerRef.value = result.next_player;
+  candidatesRef.value = result.next_candidates;
+  console.log(`Player ${playerRef.value}`)
 };
 
 const reversePoints = async (board, points, stone) => {
@@ -53,9 +62,7 @@ const reversePoints = async (board, points, stone) => {
 const waitAi = async () => {
   let result = await tauri.invoke('wait_ai', {});
   if (result) {
-    boardRef.value = result.board;
-    playerRef.value = result.next_player;
-    candidatesRef.value = result.next_candidates;
+    updateBoard(result);
   }
 };
 

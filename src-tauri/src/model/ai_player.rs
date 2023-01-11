@@ -23,11 +23,11 @@ impl AiPlayer {
         } else if 40 <= turn {
             9
         } else if 8 <= turn {
-            7
-        } else if 2 <= turn {
             8
-        } else {
+        } else if 2 <= turn {
             9
+        } else {
+            11
         }
     }
 }
