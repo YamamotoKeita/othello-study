@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 import { tauri } from '@tauri-apps/api';
 
 const boardRef = ref([]);
+const playerRef = ref([]);
 
 onMounted(async () => {
   let result = await tauri.invoke('init_game', {
@@ -13,6 +14,7 @@ onMounted(async () => {
   });
 
   boardRef.value = result.board;
+  playerRef.value = result.next_player;
 });
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -22,6 +24,7 @@ const clickCell = async (x, y) => {
   if (result) {
     const point = result.placed_point;
     boardRef.value[point.y][point.x] = result.placed_stone;
+    playerRef.value = result.next_player;
     await sleep(50);
 
     const reversing = result.reversed_lines.map(points => {
@@ -45,6 +48,7 @@ const waitAi = async () => {
   let result = await tauri.invoke('wait_ai', {});
   if (result) {
     boardRef.value = result.board;
+    playerRef.value = result.next_player;
   }
 };
 
@@ -57,6 +61,17 @@ const waitAi = async () => {
         <div class="star" v-if="(x === 1 && y === 1) || (x === 1 && y === 5) || (x === 5 && y === 1) || (x === 5 && y === 5)"></div>
         <div v-if="stone === 1 || stone === 2" class="stone" :class="{'black': stone === 1, 'white': stone === 2}"></div>
       </div>
+    </div>
+  </div>
+
+  <div class="info-row">
+    <div class="turn-info">
+      <span>Turn</span>
+      <div class="next-player" :class="{'black': playerRef === 1, 'white': playerRef === 2}"></div>
+    </div>
+    <div class="stone-info">
+      <span></span>
+      <span></span>
     </div>
   </div>
 </template>
@@ -144,4 +159,30 @@ const waitAi = async () => {
     }
   }
 
+  .info-row {
+    margin-top: 5px;
+    width: $board-size;
+    display: flex;
+
+    .turn-info {
+      display: flex;
+      align-items: center;
+
+      .next-player {
+        width: 30px; height: 30px;
+        margin-left: 5px;
+        border-radius: 50%;
+        &.black {
+          background-color: black;
+        }
+        &.white {
+          background-color: white;
+        }
+      }
+    }
+
+    .stone-info {
+      margin-left: auto;
+    }
+  }
 </style>

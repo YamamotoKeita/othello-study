@@ -15,6 +15,8 @@ pub struct GameResponse {
     placed_stone: Option<u32>,
     placed_point: Option<Point>,
     reversed_lines: Option<Vec<Vec<Point>>>,
+    next_player: Option<u32>,
+    next_candidates: Vec<Point>,
 }
 
 impl GameResponse {
@@ -24,6 +26,8 @@ impl GameResponse {
             placed_stone: None,
             placed_point: None,
             reversed_lines: None,
+            next_player: Some(GameResponse::stone_to_int(PlayerType::First)),
+            next_candidates: vec![],
         }
     }
 
@@ -35,6 +39,8 @@ impl GameResponse {
             placed_stone: Some(GameResponse::stone_to_int(player)),
             placed_point: Some(placed_point),
             reversed_lines: Some(reversed_points),
+            next_player: Some(GameResponse::stone_to_int(board.player)),
+            next_candidates: vec![],
         }
     }
 
