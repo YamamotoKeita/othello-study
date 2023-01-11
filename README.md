@@ -1,10 +1,16 @@
-# Tauri + Vue 3
+## Environment
+Install the followings.
 
-This template should help get you started developing with Tauri + Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+- Rust 1.66.0
+- Node.js 16.14.2
+- Tauri-cli 1.2.2
 
-## Recommended IDE Setup
+## Setup Project
+After cloning, run the following script in the project directory.
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+```shell
+npm install
+```
 
 ## Run
 
