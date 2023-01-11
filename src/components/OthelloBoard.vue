@@ -15,16 +15,34 @@ onMounted(async () => {
   boardRef.value = result.board;
 });
 
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 const clickCell = async (x, y) => {
   let result = await tauri.invoke('click', {x, y});
   if (result) {
-    boardRef.value = result.board;
+    const point = result.placed_point;
+    boardRef.value[point.y][point.x] = result.placed_stone;
+    await sleep(50);
+
+    const reversing = result.reversed_lines.map(points => {
+      return reversePoints(boardRef.value, points, result.placed_stone);
+    });
+    await Promise.all(reversing);
+
+    //boardRef.value = result.board;
+    waitAi();
   }
-  waitAi();
+};
+
+const reversePoints = async (board, points, stone) => {
+  for (const point of points) {
+    board[point.y][point.x] = stone;
+    await sleep(150);
+  }
 };
 
 const waitAi = async () => {
-  let result = await tauri.invoke('wait_ai', {x, y});
+  let result = await tauri.invoke('wait_ai', {});
   if (result) {
     boardRef.value = result.board;
   }
@@ -37,8 +55,7 @@ const waitAi = async () => {
     <div class="row" v-for="(row, y) in boardRef">
       <div class="cell" v-for="(stone, x) in row" @click="clickCell(x, y)">
         <div class="star" v-if="(x === 1 && y === 1) || (x === 1 && y === 5) || (x === 5 && y === 1) || (x === 5 && y === 5)"></div>
-        <div v-if="stone === 1" class="stone black"></div>
-        <div v-if="stone === 2" class="stone white"></div>
+        <div v-if="stone === 1 || stone === 2" class="stone" :class="{'black': stone === 1, 'white': stone === 2}"></div>
       </div>
     </div>
   </div>

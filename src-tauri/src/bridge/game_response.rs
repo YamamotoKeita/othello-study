@@ -14,7 +14,7 @@ pub struct GameResponse {
     board: [[u32; 8]; 8],
     placed_stone: Option<u32>,
     placed_point: Option<Point>,
-    reversed_points: Option<Vec<Vec<Point>>>,
+    reversed_lines: Option<Vec<Vec<Point>>>,
 }
 
 impl GameResponse {
@@ -23,7 +23,7 @@ impl GameResponse {
             board: GameResponse::board_to_array(board),
             placed_stone: None,
             placed_point: None,
-            reversed_points: None,
+            reversed_lines: None,
         }
     }
 
@@ -32,9 +32,9 @@ impl GameResponse {
 
         GameResponse {
             board: GameResponse::board_to_array(board),
-            placed_stone: None,
+            placed_stone: Some(GameResponse::stone_to_int(player)),
             placed_point: Some(placed_point),
-            reversed_points: Some(reversed_points),
+            reversed_lines: Some(reversed_points),
         }
     }
 
