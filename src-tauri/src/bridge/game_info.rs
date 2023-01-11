@@ -16,16 +16,20 @@ pub struct GameInfo {
 }
 
 impl GameInfo {
-    pub fn new(ai_config1: Option<AiConfig>, ai_config2: Option<AiConfig>) -> GameInfo {
-        let ai_player1 = GameInfo::make_ai_player(ai_config1);
-        let ai_player2 = GameInfo::make_ai_player(ai_config2);
-
+    pub fn new() -> GameInfo {
         GameInfo {
-            ai_player1,
-            ai_player2,
+            ai_player1: None,
+            ai_player2: None,
             board: Board::new(),
             player: PlayerType::First,
         }
+    }
+
+    pub fn init(&mut self, ai_config1: Option<AiConfig>, ai_config2: Option<AiConfig>) {
+        self.ai_player1 = GameInfo::make_ai_player(ai_config1);
+        self.ai_player2 = GameInfo::make_ai_player(ai_config2);
+        self.board = Board::new();
+        self.player = PlayerType::First;
     }
 
     fn make_ai_player(ai_config: Option<AiConfig>) -> Option<AiPlayer> {

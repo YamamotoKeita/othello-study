@@ -19,20 +19,15 @@ mod evaluator;
 #[tauri::command]
 fn init_game(ai_config1: Option<AiConfig>, ai_config2: Option<AiConfig>, state: State<'_, Storage>) -> GameResponse {
     let mut game_info = state.store.lock().unwrap();
-    let new_game = GameInfo::new(ai_config1, ai_config2);
-    *game_info = Some(new_game);
-
-    let board = &(*game_info).as_ref().unwrap().board;
-    GameResponse::new(board)
+    game_info.init(ai_config1, ai_config2);
+    GameResponse::new(&game_info.board)
 }
 
 #[tauri::command]
 fn click(x: u32, y: u32, state: State<'_, Storage>) -> Option<GameResponse> {
     let mut game_info = state.store.lock().unwrap();
-    if let Some(ref mut game_info) = &mut *game_info {
-        if game_info.click(x, y) {
-            return Some(GameResponse::new(&game_info.board));
-        }
+    if game_info.click(x, y) {
+        return Some(GameResponse::new(&game_info.board));
     }
     return None;
 }
@@ -40,10 +35,8 @@ fn click(x: u32, y: u32, state: State<'_, Storage>) -> Option<GameResponse> {
 #[tauri::command]
 fn wait_ai(state: State<'_, Storage>) -> Option<GameResponse> {
     let mut game_info = state.store.lock().unwrap();
-    if let Some(ref mut game_info) = &mut *game_info {
-        if game_info.play_ai() {
-            return Some(GameResponse::new(&game_info.board));
-        }
+    if game_info.play_ai() {
+        return Some(GameResponse::new(&game_info.board));
     }
     return None;
 }
@@ -58,7 +51,6 @@ fn main() {
         .setup(|app| {
             let storage = Storage::new();
             app.manage(storage);
-
             Ok(())
         })
         .run(tauri::generate_context!())
