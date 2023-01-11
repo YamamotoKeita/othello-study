@@ -22,6 +22,14 @@ impl PlayerType {
             PlayerType::None => panic!("Use a player when there is no player."),
         }
     }
+
+    pub fn code(&self) -> u32 {
+        match self {
+            PlayerType::None => 0,
+            PlayerType::First => 1,
+            PlayerType::Second => 2,
+        }
+    }
 }
 
 impl fmt::Display for PlayerType {

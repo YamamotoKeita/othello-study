@@ -8,9 +8,13 @@ const candidatesRef = ref([]);
 
 onMounted(async () => {
   let result = await tauri.invoke('init_game', {
-    'ai_1': null,
-    'ai_2': {
-      level: 1
+    'aiConfig1': {
+      is_ai: false,
+      level: 0,
+    },
+    'aiConfig2': {
+      is_ai: true,
+      level: 1,
     },
   });
 
@@ -27,7 +31,7 @@ const clickCell = async (x, y) => {
     const point = result.placed_point;
     boardRef.value[point.y][point.x] = result.placed_stone;
     playerRef.value = result.next_player;
-    await sleep(50);
+    await sleep(100);
 
     const reversing = result.reversed_lines.map(points => {
       return reversePoints(boardRef.value, points, result.placed_stone);

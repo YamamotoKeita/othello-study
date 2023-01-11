@@ -1,8 +1,11 @@
-use crate::AiConfig;
+use crate::bridge::ai_config::AiConfig;
+use crate::bridge::point::{Point, to_point};
 use crate::evaluator::game_evaluator::GameEvaluator;
 use crate::evaluator::simple_prediction::SimplePrediction;
+use crate::GameResponse;
 use crate::model::ai_player::AiPlayer;
 use crate::model::board::Board;
+use crate::model::player::Player;
 use crate::model::player_type::PlayerType;
 use crate::model::points::xy_to_point;
 use crate::searcher::nega_alpha::NegaAlpha;
@@ -25,18 +28,17 @@ impl GameInfo {
         }
     }
 
-    pub fn init(&mut self, ai_config1: Option<AiConfig>, ai_config2: Option<AiConfig>) {
+    pub fn init(&mut self, ai_config1: AiConfig, ai_config2: AiConfig) {
         self.ai_player1 = GameInfo::make_ai_player(ai_config1);
         self.ai_player2 = GameInfo::make_ai_player(ai_config2);
         self.board = Board::new();
         self.player = PlayerType::First;
     }
 
-    fn make_ai_player(ai_config: Option<AiConfig>) -> Option<AiPlayer> {
-        let _config = match ai_config {
-            Some(config)  => config,
-            None => return None,
-        };
+    fn make_ai_player(ai_config: AiConfig) -> Option<AiPlayer> {
+        if !ai_config.is_ai {
+            return None;
+        }
 
         let game_evaluator = GameEvaluator::new(SimplePrediction::new());
         let searcher = NegaAlpha::new(game_evaluator);
@@ -44,16 +46,33 @@ impl GameInfo {
         Some(AiPlayer::new(searcher_box))
     }
 
-    pub fn click(&mut self, x: u32, y: u32) -> bool {
+    pub fn get_player_move(&mut self, x: u32, y: u32) -> Option<Point> {
         let point = xy_to_point(x, y);
         if !self.board.can_place(point) {
-            return false;
+            return None;
         }
         if !self.can_play_manually() {
-            return false;
+            return None;
         }
 
-        let mut new_board = self.board.place_stone(point);
+        return Some(Point{x, y});
+    }
+
+    pub fn get_ai_move(&self) -> Option<Point> {
+        if let Some(ai) = self.get_ai_player() {
+            let point = to_point(ai.play(&self.board));
+            return Some(point);
+        }
+
+        return None;
+    }
+
+    pub fn play(&mut self, point: Point) -> GameResponse {
+        let points = xy_to_point(point.x, point.y);
+        let board = self.board;
+        let player = self.player;
+
+        let mut new_board = self.board.place_stone(points);
         self.player = self.player.opposite();
 
         if new_board.placeable_points == 0 {
@@ -63,23 +82,16 @@ impl GameInfo {
 
         self.board = new_board;
 
-        return true;
-    }
-
-    pub fn play_ai(&mut self) -> bool {
-        if !self.can_play_ai() {
-            return false;
-        }
-
-        return true;
+        GameResponse::new_by_move(
+            new_board,
+            board,
+            player,
+            point,
+        )
     }
 
     pub fn can_play_manually(&self) -> bool {
         return self.get_ai_player().is_none()
-    }
-
-    pub fn can_play_ai(&self) -> bool {
-        return self.get_ai_player().is_some();
     }
 
     pub fn get_ai_player(&self) -> &Option<AiPlayer> {

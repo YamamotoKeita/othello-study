@@ -1,14 +1,10 @@
 use serde::{Serialize, Deserialize};
+use crate::bridge::point::{Point, shift_point, to_point_vec};
 use crate::model::board::Board;
 use crate::model::direction::Direction;
 use crate::model::player_type::PlayerType;
 use crate::model::points::{Points, xy_to_point};
 
-#[derive(Debug, Serialize, Deserialize, Clone, Copy)]
-pub struct Point {
-    pub x: u32,
-    pub y: u32,
-}
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct GameResponse {
@@ -27,8 +23,8 @@ impl GameResponse {
             placed_stone: None,
             placed_point: None,
             reversed_lines: None,
-            next_player: Some(GameResponse::stone_to_int(PlayerType::First)),
-            next_candidates: GameResponse::points_to_vec(board.placeable_points),
+            next_player: Some(PlayerType::First.code()),
+            next_candidates: to_point_vec(board.placeable_points),
         }
     }
 
@@ -37,11 +33,11 @@ impl GameResponse {
 
         GameResponse {
             board: GameResponse::board_to_array(board),
-            placed_stone: Some(GameResponse::stone_to_int(player)),
+            placed_stone: Some(player.code()),
             placed_point: Some(placed_point),
             reversed_lines: Some(reversed_points),
-            next_player: Some(GameResponse::stone_to_int(board.player)),
-            next_candidates: GameResponse::points_to_vec(board.placeable_points),
+            next_player: Some(board.player.code()),
+            next_candidates: to_point_vec(board.placeable_points),
         }
     }
 
@@ -50,19 +46,7 @@ impl GameResponse {
         for y in 0..=7 {
             for x in 0..=7 {
                 let stone = board.get_stone(x, y);
-                result[y as usize][x as usize] = GameResponse::stone_to_int(stone);
-            }
-        }
-        result
-    }
-
-    pub fn points_to_vec(points: Points) -> Vec<Point> {
-        let mut result = vec![];
-        for y in 0..=7 {
-            for x in 0..=7 {
-                if points & xy_to_point(x, y) != 0 {
-                    result.push(Point{x, y});
-                }
+                result[y as usize][x as usize] = stone.code();
             }
         }
         result
@@ -73,7 +57,7 @@ impl GameResponse {
 
         for direction in Direction::iterator() {
             let mut line: Vec<Point> = vec![];
-            let mut next_point = GameResponse::shift_point(Point{x, y}, *direction);
+            let mut next_point = shift_point(Point{x, y}, *direction);
 
             while let Some(point) = next_point {
                 if !board.has_stone(player.opposite(), point.x, point.y) {
@@ -83,31 +67,11 @@ impl GameResponse {
                     break;
                 }
                 line.push(point);
-                next_point = GameResponse::shift_point(point, *direction);
+                next_point = shift_point(point, *direction);
             }
         }
 
         return result;
     }
 
-    pub fn shift_point(point: Point, direction: Direction) -> Option<Point> {
-        let mut x: i32 = point.x as i32;
-        let mut y: i32 = point.y as i32;
-
-        x += direction.h_move();
-        y += direction.v_move();
-
-        if x > 7 || x < 0 || y > 7 || y < 0 {
-            return None;
-        }
-        return Some(Point{ x: x as u32, y: y as u32 });
-    }
-
-    pub fn stone_to_int(stone: PlayerType) -> u32 {
-        match stone {
-            PlayerType::None =>  0,
-            PlayerType::First =>  1,
-            PlayerType::Second =>  2,
-        }
-    }
 }
