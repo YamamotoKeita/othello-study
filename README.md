@@ -5,6 +5,8 @@ Install the followings.
 - Node.js 16.14.2
 - Tauri-cli 1.2.2
 
+Probably slightly different versions will work.
+
 ## Setup Project
 After cloning, run the following script in the project directory.
 
