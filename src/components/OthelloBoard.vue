@@ -37,6 +37,7 @@ onMounted(async () => {
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const clickCell = async (x, y) => {
+  console.log('Click')
   let result = await tauri.invoke('click', {x, y});
   if (result) {
     await updateBoard(result);

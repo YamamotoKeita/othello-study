@@ -34,12 +34,12 @@ fn click(x: u32, y: u32, state: State<'_, Storage>) -> Option<GameResponse> {
 }
 
 #[tauri::command]
-fn wait_ai(state: State<'_, Storage>) -> Option<GameResponse> {
+async fn wait_ai(state: State<'_, Storage>) -> Result<GameResponse, &str> {
     let mut game_info = state.store.lock().unwrap();
     if let Some(point) = game_info.get_ai_move() {
-        return Some(game_info.play(point));
+        return Ok(game_info.play(point));
     }
-    return None;
+    return Err("No AI move");
 }
 
 fn main() {
