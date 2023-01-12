@@ -5,20 +5,13 @@ import {tauri} from '@tauri-apps/api';
 const boardRef = ref([]);
 const playerRef = ref(0);
 const candidatesRef = ref([]);
+const blackCountRef = ref(0);
+const whiteCountRef = ref(0);
 
 const turnRef = computed(() => {
-  if (boardRef.value.length === 0) {
+  const stoneCount = blackCountRef.value + whiteCountRef.value;
+  if (stoneCount === 0) {
     return undefined;
-  }
-
-  let stoneCount = 0;
-  for (let y = 0; y < 8; y++) {
-    for (let x = 0; x < 8; x++) {
-      const stone = boardRef.value[y][x];
-      if (stone === 1 || stone === 2) {
-        stoneCount++;
-      }
-    }
   }
   return stoneCount - 3;
 });
@@ -38,6 +31,7 @@ onMounted(async () => {
   boardRef.value = result.board;
   playerRef.value = result.next_player;
   candidatesRef.value = result.next_candidates;
+  updateCount(boardRef.value);
 });
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -66,6 +60,23 @@ const updateBoard = async (result) => {
 
   playerRef.value = result.next_player;
   candidatesRef.value = result.next_candidates;
+  updateCount(boardRef.value);
+};
+
+const updateCount = (board) => {
+  let blackCount = 0;
+  let whiteCount = 0;
+  board.forEach(cells => {
+    cells.forEach(stone => {
+      if (stone === 1) {
+        blackCount++;
+      } else if (stone === 2) {
+        whiteCount++;
+      }
+    });
+  });
+  blackCountRef.value = blackCount;
+  whiteCountRef.value = whiteCount;
 };
 
 const reversePoints = async (board, points, stone) => {
@@ -106,11 +117,11 @@ const isCandidate = (x, y) => {
   <div class="info-row">
     <div class="turn-info">
       <span>Turn {{turnRef}}</span>
-      <div class="next-player" :class="{'black': playerRef === 1, 'white': playerRef === 2}"></div>
+      <div class="stone next-player" :class="{'black': playerRef === 1, 'white': playerRef === 2}"></div>
     </div>
     <div class="stone-info">
-      <span></span>
-      <span></span>
+      <div class="stone black">{{blackCountRef}}</div>
+      <div class="stone white">{{whiteCountRef}}</div>
     </div>
   </div>
 </template>
@@ -214,28 +225,41 @@ $boarder-color: gray;
   width: $board-size;
   display: flex;
 
+  .stone {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+
+    &.black {
+      background-color: black;
+    }
+    &.white {
+      background-color: white;
+    }
+  }
+
   .turn-info {
     display: flex;
     align-items: center;
 
     .next-player {
-      width: 30px;
-      height: 30px;
       margin-left: 5px;
-      border-radius: 50%;
-
-      &.black {
-        background-color: black;
-      }
-
-      &.white {
-        background-color: white;
-      }
     }
   }
 
   .stone-info {
     margin-left: auto;
+    display: flex;
+    gap: 6px;
+
+    .stone {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .white {
+      color: black;
+    }
   }
 }
 </style>
