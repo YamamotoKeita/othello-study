@@ -104,32 +104,74 @@ const isCandidate = (x, y) => {
 </script>
 
 <template>
-  <div class="othello-board">
-    <div class="row" v-for="(row, y) in boardRef">
-      <div class="cell" v-for="(stone, x) in row" @click="clickCell(x, y)" :class="{'candidate': isCandidate(x, y)}">
-        <div class="star" v-if="(x === 1 && y === 1) || (x === 1 && y === 5) || (x === 5 && y === 1) || (x === 5 && y === 5)"></div>
-        <div v-if="stone === 1 || stone === 2" class="stone"
-             :class="{'black': stone === 1, 'white': stone === 2}"></div>
+  <div class="board-container">
+    <div class="area top">
+      <div class="side-margin"></div>
+      <div class="grid-guide alphabet">
+        <span v-for="alphabet in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']">{{alphabet}}</span>
+      </div>
+    </div>
+
+    <div class="area middle">
+      <div class="grid-guide number">
+        <span v-for="number in ['1', '2', '3', '4', '5', '6', '7', '8']">{{number}}</span>
+      </div>
+      <div class="othello-board">
+        <div class="row" v-for="(row, y) in boardRef">
+          <div class="cell" v-for="(stone, x) in row" @click="clickCell(x, y)" :class="{'candidate': isCandidate(x, y)}">
+            <div class="star" v-if="(x === 1 && y === 1) || (x === 1 && y === 5) || (x === 5 && y === 1) || (x === 5 && y === 5)"></div>
+            <div v-if="stone === 1 || stone === 2" class="stone" :class="{'black': stone === 1, 'white': stone === 2}"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="area bottom">
+      <div class="side-margin"></div>
+      <div class="info-row">
+        <div class="turn-info">
+          <span>Turn {{turnRef}}</span>
+          <div class="stone next-player" :class="{'black': playerRef === 1, 'white': playerRef === 2}"></div>
+        </div>
+        <div class="stone-info">
+          <div class="stone black">{{blackCountRef}}</div>
+          <div class="stone white">{{whiteCountRef}}</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="info-row">
-    <div class="turn-info">
-      <span>Turn {{turnRef}}</span>
-      <div class="stone next-player" :class="{'black': playerRef === 1, 'white': playerRef === 2}"></div>
-    </div>
-    <div class="stone-info">
-      <div class="stone black">{{blackCountRef}}</div>
-      <div class="stone white">{{whiteCountRef}}</div>
-    </div>
-  </div>
+
 </template>
 
 <style scoped lang="scss">
 $board-size: 400px;
 $board-color: #7bccc5;
 $boarder-color: gray;
+$side-margin: 16px;
+
+.board-container {
+  display: flex;
+  flex-direction: column;
+  .area {
+    display: flex;
+  }
+  .side-margin {
+    width: $side-margin;
+  }
+
+  .grid-guide {
+    display: flex;
+    justify-content: space-around;
+    &.number {
+      flex-direction: column;
+      width: $side-margin;
+    }
+    &.alphabet {
+      width: $board-size;
+    }
+  }
+}
 
 .othello-board {
   background-color: $board-color;
