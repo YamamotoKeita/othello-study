@@ -76,9 +76,13 @@ const reversePoints = async (board, points, stone) => {
 };
 
 const waitAi = async () => {
-  let result = await tauri.invoke('wait_ai', {});
+  const player = playerRef.value;
+  const result = await tauri.invoke('wait_ai', {});
   if (result) {
-    updateBoard(result);
+    await updateBoard(result);
+    if (result.next_player === player) {
+      waitAi().then();
+    }
   }
 };
 
