@@ -1,10 +1,27 @@
 <script setup>
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, computed} from 'vue';
 import {tauri} from '@tauri-apps/api';
 
 const boardRef = ref([]);
 const playerRef = ref(0);
 const candidatesRef = ref([]);
+
+const turnRef = computed(() => {
+  if (boardRef.value.length === 0) {
+    return undefined;
+  }
+
+  let stoneCount = 0;
+  for (let y = 0; y < 8; y++) {
+    for (let x = 0; x < 8; x++) {
+      const stone = boardRef.value[y][x];
+      if (stone === 1 || stone === 2) {
+        stoneCount++;
+      }
+    }
+  }
+  return stoneCount - 3;
+});
 
 onMounted(async () => {
   let result = await tauri.invoke('init_game', {
@@ -49,7 +66,6 @@ const updateBoard = async (result) => {
 
   playerRef.value = result.next_player;
   candidatesRef.value = result.next_candidates;
-  console.log(`Player ${playerRef.value}`)
 };
 
 const reversePoints = async (board, points, stone) => {
@@ -85,7 +101,7 @@ const isCandidate = (x, y) => {
 
   <div class="info-row">
     <div class="turn-info">
-      <span>Turn</span>
+      <span>Turn {{turnRef}}</span>
       <div class="next-player" :class="{'black': playerRef === 1, 'white': playerRef === 2}"></div>
     </div>
     <div class="stone-info">
