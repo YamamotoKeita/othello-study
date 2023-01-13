@@ -15,14 +15,6 @@ impl PlayerType {
         }
     }
 
-    pub fn sign(&self) -> i32 {
-        match self {
-            PlayerType::First => 1,
-            PlayerType::Second => -1,
-            PlayerType::None => panic!("Use a player when there is no player."),
-        }
-    }
-
     pub fn code(&self) -> u32 {
         match self {
             PlayerType::None => 0,

@@ -142,6 +142,7 @@ impl Board {
         }
     }
 
+    #[allow(dead_code)]
     pub fn change_turn(&mut self) {
         self.player = self.player.opposite();
 
@@ -150,6 +151,7 @@ impl Board {
         self.placeable_points = Board::placeable_points(player_stones, opponent_stones);
     }
 
+    #[allow(dead_code)]
     pub fn is_game_end(&self) -> bool {
         self.player == PlayerType::None
     }
@@ -175,6 +177,7 @@ impl Board {
         self.get_stones(player) & point > 0
     }
 
+    #[allow(dead_code)]
     pub fn count_stones(&self, player: PlayerType) -> i32 {
         self.get_stones(player).count_ones() as i32
     }
@@ -277,6 +280,7 @@ impl Board {
         return result;
     }
 
+    #[allow(dead_code)]
     pub fn clone(&self) -> Board {
         Board {
             first_stones: self.first_stones,
