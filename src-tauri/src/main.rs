@@ -14,8 +14,6 @@ use crate::bridge::storage::Storage;
 mod tests;
 mod model;
 mod bridge;
-mod searcher_old;
-mod evaluator_old;
 mod searcher;
 mod evaluator;
 
