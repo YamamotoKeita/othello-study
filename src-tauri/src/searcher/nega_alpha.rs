@@ -16,9 +16,10 @@ impl <T: Evaluator> NegaAlpha<T> {
         }
     }
 
-    fn nega_alpha(&self, board: &mut BoardNode, depth: u32, mut alpha: i32, beta: i32, passed: bool) -> i32 {
+    fn nega_alpha(&self, board: &mut BoardNode, depth: u32, mut alpha: i32, beta: i32, passed: bool) -> Evaluation {
         // Evaluates a board on a terminal node
         if depth == 0 {
+            // TODO Consider end of the game
             return self.evaluator.evaluate(&board);
         }
 
@@ -27,7 +28,7 @@ impl <T: Evaluator> NegaAlpha<T> {
         // Skip and turn change
         if placeable_points == 0 {
             if passed {
-                return self.evaluator.evaluate(&board);
+                return board.player_score();
             }
 
             board.change_player();

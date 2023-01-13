@@ -1,6 +1,7 @@
 use std::mem;
 use crate::model::points::*;
 use crate::model::direction::Direction;
+use crate::model::evaluation::Evaluation;
 
 /// Representation of Othello board.
 #[derive(Clone, Copy)]
@@ -90,6 +91,21 @@ impl BoardNode {
             player_stones: opponent_stones,
             opponent_stones: player_stones,
         }
+    }
+
+    #[inline(always)]
+    pub fn player_score(&self) -> Evaluation {
+        let player_count = self.player_stone_count();
+        let opponent_count = self.opponent_stone_count();
+        let mut score = player_count - opponent_count;
+        let vacant_score = 64 - player_count - opponent_count;
+
+        if score > 0 {
+            score += vacant_score;
+        } else if score < 0 {
+            score -= vacant_score;
+        }
+        return score;
     }
 
     #[allow(dead_code)]
