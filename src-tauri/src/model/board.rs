@@ -5,22 +5,22 @@ use crate::model::player_type::PlayerType;
 /// Representation of Othello board.
 #[derive(Clone, Copy)]
 pub struct Board {
-    pub player1_stones: Points,
-    pub player2_stones: Points,
+    pub first_stones: Points,
+    pub second_stones: Points,
     pub player: PlayerType,
     pub placeable_points: Points,
 }
 
 impl Board {
     pub fn new() -> Board {
-        let player1_stones = coordinates_to_points(&[(3, 4), (4, 3)]);
-        let player2_stones = coordinates_to_points(&[(3, 3), (4, 4)]);
+        let first_stones = coordinates_to_points(&[(3, 4), (4, 3)]);
+        let second_stones = coordinates_to_points(&[(3, 3), (4, 4)]);
 
         Board {
-            player1_stones,
-            player2_stones,
+            first_stones,
+            second_stones,
             player: PlayerType::First,
-            placeable_points: Board::placeable_points(player1_stones, player2_stones),
+            placeable_points: Board::placeable_points(first_stones, second_stones),
         }
     }
 
@@ -66,15 +66,15 @@ impl Board {
         };
 
         Board {
-            player1_stones,
-            player2_stones,
+            first_stones: player1_stones,
+            second_stones: player2_stones,
             player,
             placeable_points: Board::placeable_points(player_stones, opponent_stones),
         }
     }
 
     pub fn stone_count(&self) -> i32 {
-        (self.player1_stones.count_ones() + self.player2_stones.count_ones()) as i32
+        (self.first_stones.count_ones() + self.second_stones.count_ones()) as i32
     }
 
     /*
@@ -112,8 +112,8 @@ impl Board {
         let placeable_points = Board::placeable_points(opponent_stones, player_stones);
 
         Board {
-            player1_stones,
-            player2_stones,
+            first_stones: player1_stones,
+            second_stones: player2_stones,
             player: self.player.opposite(),
             placeable_points,
         }
@@ -135,8 +135,8 @@ impl Board {
         }
 
         Board {
-            player1_stones: self.player1_stones,
-            player2_stones: self.player2_stones,
+            first_stones: self.first_stones,
+            second_stones: self.second_stones,
             player: new_player,
             placeable_points
         }
@@ -216,8 +216,8 @@ impl Board {
     #[inline(always)]
     pub fn get_stones(&self, player: PlayerType) -> u64 {
         match player {
-            PlayerType::First => self.player1_stones,
-            PlayerType::Second => self.player2_stones,
+            PlayerType::First => self.first_stones,
+            PlayerType::Second => self.second_stones,
             PlayerType::None => panic!("Use a player when there is no player."),
         }
     }
@@ -226,8 +226,8 @@ impl Board {
     #[inline(always)]
     pub fn get_stones_ref(&mut self, player: PlayerType) -> &mut u64 {
         match player {
-            PlayerType::First => &mut self.player1_stones,
-            PlayerType::Second => &mut self.player2_stones,
+            PlayerType::First => &mut self.first_stones,
+            PlayerType::Second => &mut self.second_stones,
             PlayerType::None => panic!("Use a player when there is no player."),
         }
     }
@@ -235,8 +235,8 @@ impl Board {
     #[inline(always)]
     pub fn player_stones(&self) -> Points {
         match self.player {
-            PlayerType::First => self.player1_stones,
-            PlayerType::Second => self.player2_stones,
+            PlayerType::First => self.first_stones,
+            PlayerType::Second => self.second_stones,
             PlayerType::None => panic!("Use a player when there is no player."),
         }
     }
@@ -244,8 +244,8 @@ impl Board {
     #[inline(always)]
     pub fn opponent_stones(&self) -> Points {
         match self.player {
-            PlayerType::First => self.player1_stones,
-            PlayerType::Second => self.player2_stones,
+            PlayerType::First => self.first_stones,
+            PlayerType::Second => self.second_stones,
             PlayerType::None => panic!("Use a player when there is no player."),
         }
     }
@@ -279,8 +279,8 @@ impl Board {
 
     pub fn clone(&self) -> Board {
         Board {
-            player1_stones: self.player1_stones,
-            player2_stones: self.player2_stones,
+            first_stones: self.first_stones,
+            second_stones: self.second_stones,
             player: self.player,
             placeable_points: self.placeable_points,
         }

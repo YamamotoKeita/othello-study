@@ -23,10 +23,10 @@ impl Evaluator for CellWeightEvaluator {
 
         for n in 0..CELL_WEIGHT.len() {
             let mask: Points = 1 << (63 - n);
-            if board.player1_stones & mask != 0 {
+            if board.first_stones & mask != 0 {
                 first += CELL_WEIGHT[n];
             }
-            if board.player2_stones & mask != 0 {
+            if board.second_stones & mask != 0 {
                 second += CELL_WEIGHT[n];
             }
         }
