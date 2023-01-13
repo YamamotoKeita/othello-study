@@ -1,3 +1,8 @@
+# othello-study
+An Othello program to try out Rust.
+
+![Screenshot](img/screenshot.png)
+
 ## Environment
 Install the followings.
 
