@@ -1,3 +1,4 @@
+use std::mem;
 use crate::model::points::*;
 use crate::model::direction::Direction;
 use crate::model::player_type::PlayerType;
@@ -10,6 +11,10 @@ pub struct BoardNode {
 }
 
 impl BoardNode {
+    #[inline(always)]
+    pub fn change_player(&mut self) {
+        mem::swap(&mut self.player_stones, &mut self.opponent_stones);
+    }
 
     #[inline(always)]
     pub fn stone_count(&self) -> i32 {
@@ -17,7 +22,17 @@ impl BoardNode {
     }
 
     #[inline(always)]
-    fn placeable_points(&self) -> Points {
+    pub fn player_stone_count(&self) -> i32 {
+        self.player_stones.count_ones() as i32
+    }
+
+    #[inline(always)]
+    pub fn opponent_stone_count(&self) -> i32 {
+        self.opponent_stones.count_ones() as i32
+    }
+
+    #[inline(always)]
+    pub fn placeable_points(&self) -> Points {
         let horizontal_targets = self.opponent_stones & MASK_LEFT_RIGHT_ZERO;
         let vertical_targets = self.opponent_stones & MASK_TOP_BOTTOM_ZERO;
         let diagonal_targets = self.opponent_stones & MASK_ALL_SIDES_ZERO;
@@ -45,6 +60,36 @@ impl BoardNode {
         }
 
         return result;
+    }
+
+    #[inline(always)]
+    pub fn place_stone(&self, point: Points) -> BoardNode {
+        let mut reversed: Points = 0;
+        let mut player_stones = self.player_stones;
+        let mut opponent_stones = self.opponent_stones;
+
+        for direction in Direction::iterator() {
+            let mut line: Points = 0;
+            let mut next_point = shift_points(point, *direction);
+
+            while (next_point != 0) && ((next_point & opponent_stones) != 0) {
+                line |= next_point;
+                next_point = shift_points(next_point, *direction);
+            }
+
+            if (next_point & player_stones) != 0 {
+                reversed |= line;
+            }
+        }
+
+        // Both addition and removal can be done with the XOR operation.
+        player_stones ^= point | reversed;
+        opponent_stones ^= reversed;
+
+        BoardNode {
+            player_stones: opponent_stones,
+            opponent_stones: player_stones,
+        }
     }
 
     #[inline(always)]

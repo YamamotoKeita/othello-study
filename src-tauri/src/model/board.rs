@@ -232,6 +232,24 @@ impl Board {
         }
     }
 
+    #[inline(always)]
+    pub fn player_stones(&self) -> Points {
+        match self.player {
+            PlayerType::First => self.player1_stones,
+            PlayerType::Second => self.player2_stones,
+            PlayerType::None => panic!("Use a player when there is no player."),
+        }
+    }
+
+    #[inline(always)]
+    pub fn opponent_stones(&self) -> Points {
+        match self.player {
+            PlayerType::First => self.player1_stones,
+            PlayerType::Second => self.player2_stones,
+            PlayerType::None => panic!("Use a player when there is no player."),
+        }
+    }
+
     #[allow(dead_code)]
     pub fn to_string(&self) -> String {
         let mut result = "".to_string();

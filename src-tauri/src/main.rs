@@ -16,6 +16,8 @@ mod model;
 mod bridge;
 mod searcher_old;
 mod evaluator_old;
+mod searcher;
+mod evaluator;
 
 #[tauri::command]
 fn init_game(ai_config_1: AiConfig, ai_config_2: AiConfig, state: State<'_, Storage>) -> GameResponse {
