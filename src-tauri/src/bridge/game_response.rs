@@ -3,7 +3,6 @@ use crate::bridge::point::{Point, shift_point, to_point_vec};
 use crate::model::board::Board;
 use crate::model::direction::Direction;
 use crate::model::player_type::PlayerType;
-use crate::model::points::{Points, xy_to_point};
 
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

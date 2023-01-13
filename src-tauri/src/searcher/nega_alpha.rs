@@ -2,7 +2,6 @@ use std::cmp::max;
 use crate::evaluator::Evaluator;
 use crate::model::board_node::BoardNode;
 use crate::model::evaluation::{Evaluation, EVALUATION_MAX, EVALUATION_MIN};
-use crate::model::player_type::PlayerType;
 use crate::model::points::POINT_ITERATOR;
 use crate::searcher::game_tree_searcher::GameTreeSearcher;
 

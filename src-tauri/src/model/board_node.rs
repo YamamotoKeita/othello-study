@@ -1,7 +1,6 @@
 use std::mem;
 use crate::model::points::*;
 use crate::model::direction::Direction;
-use crate::model::player_type::PlayerType;
 
 /// Representation of Othello board.
 #[derive(Clone, Copy)]
@@ -16,6 +15,7 @@ impl BoardNode {
         mem::swap(&mut self.player_stones, &mut self.opponent_stones);
     }
 
+    #[allow(dead_code)]
     #[inline(always)]
     pub fn stone_count(&self) -> i32 {
         (self.player_stones.count_ones() + self.opponent_stones.count_ones()) as i32
@@ -92,6 +92,7 @@ impl BoardNode {
         }
     }
 
+    #[allow(dead_code)]
     #[inline(always)]
     pub fn clone(&self) -> BoardNode {
         BoardNode {
