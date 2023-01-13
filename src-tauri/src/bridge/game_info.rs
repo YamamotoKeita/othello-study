@@ -1,15 +1,14 @@
 use crate::bridge::ai_config::AiConfig;
 use crate::bridge::point::{Point, to_point};
-use crate::evaluator_old::game_evaluator::GameEvaluator;
-use crate::evaluator_old::simple_prediction::SimplePrediction;
+use crate::evaluator::simple_prediction::SimplePrediction;
 use crate::GameResponse;
 use crate::model::ai_player::AiPlayer;
 use crate::model::board::Board;
 use crate::model::player::Player;
 use crate::model::player_type::PlayerType;
 use crate::model::points::xy_to_point;
-use crate::searcher_old::nega_alpha::NegaAlpha;
-use crate::searcher_old::Searcher;
+use crate::searcher::nega_alpha::NegaAlpha;
+use crate::searcher::Searcher;
 
 pub struct GameInfo {
     ai_player1: Option<AiPlayer>,
@@ -40,8 +39,8 @@ impl GameInfo {
             return None;
         }
 
-        let game_evaluator = GameEvaluator::new(SimplePrediction::new());
-        let searcher = NegaAlpha::new(game_evaluator);
+        let evaluator = SimplePrediction::new();
+        let searcher = NegaAlpha::new(evaluator);
         let searcher_box: Box<dyn Searcher + Send + 'static> = Box::new(searcher);
         Some(AiPlayer::new(searcher_box))
     }
