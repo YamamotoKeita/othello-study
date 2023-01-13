@@ -244,8 +244,8 @@ impl Board {
     #[inline(always)]
     pub fn opponent_stones(&self) -> Points {
         match self.player {
-            PlayerType::First => self.first_stones,
-            PlayerType::Second => self.second_stones,
+            PlayerType::First => self.second_stones,
+            PlayerType::Second => self.first_stones,
             PlayerType::None => panic!("Use a player when there is no player."),
         }
     }
