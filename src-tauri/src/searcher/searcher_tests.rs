@@ -602,5 +602,26 @@ mod searcher_tests {
         assert_eq!(result[0].1, -64);
     }
 
-    // TODO Test leaf nodes that is end of the game are correctly evaluated.
+    #[test]
+    fn max_depth_end() {
+        for searcher in searchers() {
+            test_max_depth_end(&*searcher);
+        }
+    }
+    fn test_max_depth_end(searcher: &dyn GameTreeSearcher) {
+        let board = Board::new_by_text("
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ●
+● ● ● ● ● ○ □ □
+", PlayerType::First);
+
+        let result = searcher.evaluate_next_moves(&board, 1);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].1, 64);
+    }
 }
