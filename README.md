@@ -26,3 +26,7 @@ Use a npm-script named 'tauri' in 'othello-test/package.json' with 'dev' option 
 ```shell
 npm run tauri dev
 ```
+
+## Unit Test
+
+"dist" directory is needed in the project root to run Rust unit tests.
