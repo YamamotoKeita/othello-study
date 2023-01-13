@@ -1,5 +1,5 @@
 
-use crate::evaluator::Evaluator;
+use crate::evaluator_old::Evaluator;
 use crate::model::board::Board;
 use crate::model::evaluation::Evaluation;
 use crate::model::player_type::PlayerType;

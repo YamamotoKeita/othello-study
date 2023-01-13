@@ -6,3 +6,4 @@ pub mod evaluation;
 pub mod player;
 pub mod ai_player;
 pub mod cui_player;
+pub mod board_node;

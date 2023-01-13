@@ -1,5 +1,5 @@
 use crate::model::points::*;
-use crate::evaluator::Evaluator;
+use crate::evaluator_old::Evaluator;
 use crate::model::board::Board;
 use crate::model::direction::Direction;
 use crate::model::evaluation::Evaluation;

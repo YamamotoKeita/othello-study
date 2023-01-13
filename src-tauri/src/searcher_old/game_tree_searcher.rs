@@ -1,7 +1,7 @@
 use crate::model::board::Board;
 use crate::model::evaluation::{Evaluation, EVALUATION_MIN};
 use crate::model::points::{POINT_ITERATOR, Points};
-use crate::searcher::Searcher;
+use crate::searcher_old::Searcher;
 
 pub trait GameTreeSearcher {
     fn evaluate_child_board(&self, board: &Board, child_board: &Board, depth: u32) -> Evaluation;

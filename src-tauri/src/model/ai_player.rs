@@ -1,7 +1,7 @@
 use crate::model::board::Board;
 use crate::model::player::Player;
 use crate::model::points::Points;
-use crate::searcher::Searcher;
+use crate::searcher_old::Searcher;
 
 pub struct AiPlayer {
     searcher: Box<dyn Searcher + Send + 'static>,

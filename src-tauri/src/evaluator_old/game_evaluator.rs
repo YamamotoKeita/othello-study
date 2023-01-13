@@ -1,5 +1,5 @@
-use crate::evaluator::Evaluator;
-use crate::evaluator::stone_count::StoneCountEvaluator;
+use crate::evaluator_old::Evaluator;
+use crate::evaluator_old::stone_count::StoneCountEvaluator;
 use crate::model::board::Board;
 use crate::model::evaluation::Evaluation;
 
