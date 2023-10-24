@@ -12,6 +12,19 @@ Install the followings.
 
 Probably slightly different versions will work.
 
+### Instal Rust
+
+Run the following in your terminal, then follow the on-screen instructions. 
+
+```shell
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+### Install Node.js
+
+https://nodejs.org/
+
+
 ## Setup Project
 After cloning, run the following script in the project directory.
 
